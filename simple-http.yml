@@ -1,0 +1,22 @@
+version: '3.3'
+services:
+  simple-http-server:
+    image: pareshpawar/simple-http-server:latest
+    ports:
+      - "80:8081"
+    networks:
+      - webnet
+networks:
+  webnet:
+ labels:
+        - traefik.enable=true
+        - traefik.docker.network=traefik-public
+        - traefik.constraint-label=traefik-public
+        - traefik.http.routers.condescending_brahmagupta-http.rule=Host(`${DOMAIN?Variable not set}`)
+        - traefik.http.routers.condescending_brahmagupta-http.entrypoints=http
+        - traefik.http.routers.condescending_brahmagupta-http.middlewares=https-redirect
+        - traefik.http.routers.condescending_brahmagupta-https.rule=Host(`${DOMAIN?Variable not set}`)
+        - traefik.http.routers.condescending_brahmagupta-https.entrypoints=https
+        - traefik.http.routers.condescending_brahmagupta-https.tls=true
+        - traefik.http.routers.condescending_brahmagupta-https.tls.certresolver=le
+        - traefik.http.services.condescending_brahmagupta.loadbalancer.server.port=8081
